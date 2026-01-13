@@ -1,7 +1,7 @@
 targetScope = 'subscription'
 
 // --- PARAMETERS ---
-param location string = 'eastus'
+param location string = 'eastus2'
 param rgName string = 'rg-hve-lab-security'
 
 // --- RESOURCE GROUP ---
