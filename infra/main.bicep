@@ -56,3 +56,10 @@ resource securityContact 'Microsoft.Security/securityContacts@2023-12-01-preview
     ]
   }
 }
+// 6. Enable Defender CSPM (Cloud Security Posture Management)
+resource defenderCloudPosture 'Microsoft.Security/pricings@2024-01-01' = {
+  name: 'CloudPosture'
+  properties: {
+    pricingTier: 'Standard'
+  }
+}
