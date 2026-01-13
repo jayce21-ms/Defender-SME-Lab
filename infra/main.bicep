@@ -2,35 +2,15 @@ targetScope = 'subscription'
 
 param location string = 'eastus2'
 param workspaceName string = 'law-hve-security-logs'
+param emailAddress string = 'jayce-lab-alerts@example.com' 
 
-// 1. Create the Resource Group
+// 1. Resource Group
 resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
   name: 'rg-hve-lab-security'
   location: location
 }
 
-// 2. Create the Log Analytics Workspace (The Security Brain)
-module logAnalyticsWorkspace 'br/public:avm/res/operational-insights/workspace:0.7.0' = {
-  scope: resourceGroup(rg.name)
-  name: 'deploy-log-analytics'
-  params: {
-    name: workspaceName
-    location: location
-  }
-}
-targetScope = 'subscription'
-
-param location string = 'eastus2'
-param workspaceName string = 'law-hve-security-logs'
-param emailAddress string = 'your-email@example.com' // <-- Change this!
-
-// 1. Existing Resource Group
-resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
-  name: 'rg-hve-lab-security'
-  location: location
-}
-
-// 2. Existing Log Analytics Workspace
+// 2. Log Analytics Workspace (The Brain)
 module logAnalyticsWorkspace 'br/public:avm/res/operational-insights/workspace:0.7.0' = {
   scope: resourceGroup(rg.name)
   name: 'deploy-log-analytics'
@@ -40,7 +20,7 @@ module logAnalyticsWorkspace 'br/public:avm/res/operational-insights/workspace:0
   }
 }
 
-// 3. NEW: Enable Defender for Servers (Plan 1)
+// 3. Defender for Servers
 resource defenderServers 'Microsoft.Security/pricings@2024-01-01' = {
   name: 'VirtualMachines'
   properties: {
@@ -49,7 +29,7 @@ resource defenderServers 'Microsoft.Security/pricings@2024-01-01' = {
   }
 }
 
-// 4. NEW: Enable Defender for Storage
+// 4. Defender for Storage
 resource defenderStorage 'Microsoft.Security/pricings@2024-01-01' = {
   name: 'StorageAccounts'
   properties: {
@@ -58,7 +38,7 @@ resource defenderStorage 'Microsoft.Security/pricings@2024-01-01' = {
   }
 }
 
-// 5. NEW: Set Security Contact (Where alerts go)
+// 5. Security Contact
 resource securityContact 'Microsoft.Security/securityContacts@2023-12-01-preview' = {
   name: 'default'
   properties: {
