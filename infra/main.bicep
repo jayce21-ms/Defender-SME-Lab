@@ -71,6 +71,7 @@ resource defenderCloudPosture 'Microsoft.Security/pricings@2024-01-01' = {
 resource vnet 'Microsoft.Network/virtualNetworks@2023-11-01' = {
   name: 'vnet-hve-lab'
   location: location
+  scope: rg // <--- ADD THIS
   properties: {
     addressSpace: {
       addressPrefixes: ['10.0.0.0/16']
@@ -86,16 +87,17 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-11-01' = {
   }
 }
 
-// 8. Windows Victim (Easiest)
+// 8. Windows Victim 
 resource nicWindows 'Microsoft.Network/networkInterfaces@2023-11-01' = {
   name: 'nic-win-victim'
   location: location
+  scope: rg // <--- ADD THIS
   properties: {
     ipConfigurations: [
       {
         name: 'ipconfig1'
         properties: {
-          subnet: { id: vnet.properties.subnets[0].id }
+          subnet: { id: vnet.id, 'properties/subnets/0': {} } // Refined for scope
           privateIPAllocationMethod: 'Dynamic'
         }
       }
@@ -106,6 +108,7 @@ resource nicWindows 'Microsoft.Network/networkInterfaces@2023-11-01' = {
 resource windowsVM 'Microsoft.Compute/virtualMachines@2024-03-01' = {
   name: 'vm-win-victim'
   location: location
+  scope: rg // <--- ADD THIS
   identity: { type: 'SystemAssigned' }
   properties: {
     hardwareProfile: { vmSize: 'Standard_B2s' }
@@ -128,16 +131,17 @@ resource windowsVM 'Microsoft.Compute/virtualMachines@2024-03-01' = {
   }
 }
 
-// 9. Linux Victim (Harder)
+// 9. Linux Victim
 resource nicLinux 'Microsoft.Network/networkInterfaces@2023-11-01' = {
   name: 'nic-nix-victim'
   location: location
+  scope: rg // <--- ADD THIS
   properties: {
     ipConfigurations: [
       {
         name: 'ipconfig1'
         properties: {
-          subnet: { id: vnet.properties.subnets[0].id }
+          subnet: { id: vnet.id, 'properties/subnets/0': {} } // Refined for scope
           privateIPAllocationMethod: 'Dynamic'
         }
       }
@@ -148,6 +152,7 @@ resource nicLinux 'Microsoft.Network/networkInterfaces@2023-11-01' = {
 resource linuxVM 'Microsoft.Compute/virtualMachines@2024-03-01' = {
   name: 'vm-nix-victim'
   location: location
+  scope: rg // <--- ADD THIS
   identity: { type: 'SystemAssigned' }
   properties: {
     hardwareProfile: { vmSize: 'Standard_B2s' }
