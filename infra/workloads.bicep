@@ -1,23 +1,17 @@
-// workloads.bicep
+// This file runs at Resource Group scope by default
 param location string
-param vnetName string = 'vnet-hve-lab'
 
-// Virtual Network
+// 1. Networking
 resource vnet 'Microsoft.Network/virtualNetworks@2023-11-01' = {
-  name: vnetName
+  name: 'vnet-hve-lab'
   location: location
   properties: {
     addressSpace: { addressPrefixes: ['10.0.0.0/16'] }
-    subnets: [
-      {
-        name: 'snet-victims'
-        properties: { addressPrefix: '10.0.1.0/24' }
-      }
-    ]
+    subnets: [{ name: 'snet-victims', properties: { addressPrefix: '10.0.1.0/24' } }]
   }
 }
 
-// Windows Victim
+// 2. Windows Victim
 resource nicWindows 'Microsoft.Network/networkInterfaces@2023-11-01' = {
   name: 'nic-win-victim'
   location: location
@@ -59,7 +53,7 @@ resource windowsVM 'Microsoft.Compute/virtualMachines@2024-03-01' = {
   }
 }
 
-// Linux Victim
+// 3. Linux Victim
 resource nicLinux 'Microsoft.Network/networkInterfaces@2023-11-01' = {
   name: 'nic-nix-victim'
   location: location
@@ -100,4 +94,4 @@ resource linuxVM 'Microsoft.Compute/virtualMachines@2024-03-01' = {
       networkInterfaces: [{ id: nicLinux.id }]
     }
   }
-}]
+}
