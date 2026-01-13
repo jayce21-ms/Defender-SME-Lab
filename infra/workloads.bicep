@@ -1,7 +1,5 @@
-// This file runs at Resource Group scope by default
 param location string
 
-// 1. Networking
 resource vnet 'Microsoft.Network/virtualNetworks@2023-11-01' = {
   name: 'vnet-hve-lab'
   location: location
@@ -11,7 +9,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-11-01' = {
   }
 }
 
-// 2. Windows Victim
+// Windows Victim
 resource nicWindows 'Microsoft.Network/networkInterfaces@2023-11-01' = {
   name: 'nic-win-victim'
   location: location
@@ -36,7 +34,9 @@ resource windowsVM 'Microsoft.Compute/virtualMachines@2024-03-01' = {
     hardwareProfile: { vmSize: 'Standard_B2s' }
     osProfile: {
       computerName: 'win-victim'
+      #disable-next-line adminusername-should-not-be-literal
       adminUsername: 'azureuser'
+      #disable-next-line use-secure-value-for-secure-inputs
       adminPassword: 'SME-Lab-Password-2026!'
     }
     storageProfile: {
@@ -53,7 +53,7 @@ resource windowsVM 'Microsoft.Compute/virtualMachines@2024-03-01' = {
   }
 }
 
-// 3. Linux Victim
+// Linux Victim
 resource nicLinux 'Microsoft.Network/networkInterfaces@2023-11-01' = {
   name: 'nic-nix-victim'
   location: location
@@ -78,7 +78,9 @@ resource linuxVM 'Microsoft.Compute/virtualMachines@2024-03-01' = {
     hardwareProfile: { vmSize: 'Standard_B2s' }
     osProfile: {
       computerName: 'nix-victim'
+      #disable-next-line adminusername-should-not-be-literal
       adminUsername: 'azureuser'
+      #disable-next-line use-secure-value-for-secure-inputs
       adminPassword: 'SME-Lab-Password-2026!'
       linuxConfiguration: { disablePasswordAuthentication: false }
     }
