@@ -42,3 +42,30 @@ managedNetwork: {
   isolationMode: 'AllowOnlyApprovedOutbound' // This is the "Mani-level" security fix
 }
 publicNetworkAccess: 'Disabled' // This is the "Toni-level" TD compliance fix
+// ... (keep your parameters at the top)
+
+resource aiHub 'Microsoft.MachineLearningServices/workspaces@2023-08-01-preview' = {
+  name: aiHubName
+  location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    friendlyName: 'Hardened AI Foundry Hub'
+    storageAccount: storageAccountId
+    keyVault: keyVaultId
+    
+    // FIX #3: Integrated property (TD Compliance)
+    publicNetworkAccess: 'Disabled' 
+    
+    // FIX #2: Using the passed-in parameters
+    vnetAllowRPCAndPublicNetworkAccess: false 
+    
+    managedNetwork: {
+      isolationMode: 'AllowOnlyApprovedOutbound' // The core security requirement
+      status: {
+        status: 'Active'
+      }
+    }
+  }
+}
