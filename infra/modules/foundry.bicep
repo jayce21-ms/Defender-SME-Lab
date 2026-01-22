@@ -3,9 +3,6 @@ param aiHubName string
 param location string
 param storageAccountId string
 param keyVaultId string
-param vnetId string
-param subnetId string
-
 resource aiHub 'Microsoft.MachineLearningServices/workspaces@2023-08-01-preview' = {
   name: aiHubName
   location: location
